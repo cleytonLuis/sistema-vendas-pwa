@@ -1,11 +1,11 @@
 {
   "name": "GK Suplementos",
-  "short_name": "GK Supl.",
-  "start_url": "/",
+  "short_name": "GK Supl",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#007bff",
-  "description": "Aplicativo GK Suplementos — redireciona ao sistema principal.",
+  "theme_color": "#0a74da",
+  "description": "Aplicativo GK Suplementos",
   "icons": [
     {
       "src": "icons/icon-192.png",
