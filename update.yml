@@ -1,0 +1,19 @@
+name: On Push to main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show updated manifest
+        run: |
+          echo "Arquivo manifest.json atualizado – OK"
+          echo "Conteúdo:"
+          cat manifest.json || true
