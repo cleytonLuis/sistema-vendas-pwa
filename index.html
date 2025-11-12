@@ -1,155 +1,32 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>GK Suplementos</title>
+  <title>GK Suplementos — PWA Redirect</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
-  
   <!-- Manifest do PWA (será atualizado automaticamente pelo script) -->
   <link rel="manifest" href="manifest.json">
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta name="theme-color" content="#007bff" />
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; background:#f6f8fb; color:#222; }
+    .box { text-align:center; padding:24px; border-radius:8px; background:white; box-shadow:0 6px 20px rgba(0,0,0,.06); width:92%; max-width:520px; }
+    .logo { font-weight:700; font-size:20px; color:#007bff; margin-bottom:12px; }
+    p { margin:10px 0; }
+    .small { font-size:13px; color:#666; margin-top:10px; }
+  </style>
 </head>
 <body>
-	  <header class="navbar">
-	  <div class="navbar-left">
-		<a href="/index.html" class="logo">
-		  <img src="/img/logo.png" alt="Logo da empresa" class="logo-img">
-		</a>
-	  </div>
-
-	  <nav class="navbar-links">
-		<a href="/index.html" class="active">📊 Dashboard</a>
-
-		<div class="dropdown menu-item">
-		  <a href="#" class="dropdown-toggle">🛒 Vendas</a>
-		  <ul class="dropdown-menu">
-			<li><a href="/cadastro.html">Cadastrar Venda</a></li>
-			<li><a href="/acompanhamento-vendas.html">Acompanhar Vendas</a></li>
-		  </ul>
-		</div>
-
-		<a href="/produtos.html">📦 Produtos</a>
-		<a href="/estoque.html">📦 Estoque</a>
-
-		<div class="nav-right">
-		  <button id="btnLogout" class="btn-logout">Sair</button>
-		</div>
-	  </nav>
-	</header>
-
-  <div class="container">
-	<!-- FILTROS -->
-    <div class="filters dashboard-cards" style="align-items:center;">
-      <label>Início <input type="date" id="inicio"></label>
-      <label>Fim <input type="date" id="fim"></label>
-      <button id="btnFiltro" class="btn">Aplicar</button>
-      <button id="btnHoje" class="btn">Hoje</button>
-      <button id="btnLimpar" class="btn" style="background:#6b7280;margin-left:8px;">Limpar Filtros</button>
-    </div>
-
-	<h3>Estoque disponível</h3>
-		<div class="dashboard-cards">
-		<!-- 🔹 NOVO CONTAINER DE CARDS DE ESTOQUE -->
-		<section id="resumoEstoque" class="resumo-financeiro">
-		  <!-- Cards dos produtos em maior estoque serão carregados aqui -->
-		</section>
-		</div>
-	
-	<!-- 🔹 Grupo Operacional -->
-	<h3 class="kpi-titulo grupo-operacional">Indicadores Operacionais</h3>
-	<div class="dashboard-cards grupo-operacional">
-	  <div class="card">
-		<h3>📦 Estoque Entrada</h3>
-		<p id="kpiEstoque">0</p>
-	  </div>
-	  <div class="card">
-		<h3>📤 Estoque Saída</h3>
-		<p id="kpiEstoqueSaida">0</p>
-	  </div>
-	  <div class="card">
-		<h3>📦 Itens Vendidos</h3>
-		<p id="kpiItens">0</p>
-	  </div>
-	  <div class="card">
-		<h3>👥 Clientes</h3>
-		<p id="kpiClientes">0</p>
-	  </div>
-	</div>
-
-	<!-- 🔹 Grupo Financeiro -->
-	<h3 class="kpi-titulo grupo-financeiro">Indicadores Financeiros</h3>
-	<div class="dashboard-cards grupo-financeiro">
-	  <div class="card">
-		<h3>💰 Receita Total</h3>
-		<p id="kpiReceita">R$ 0,00</p>
-	  </div>
-	  <div class="card">
-		<h3>🧾 Total de Vendas</h3>
-		<p id="kpiVendas">0</p>
-	  </div>
-	  <div class="card">
-		<h3>📊 Margem de Lucro</h3>
-		<p id="margemLucro">0%</p>
-	  </div>
-	  <div class="card">
-		<h3>🎟️ Ticket Médio</h3>
-		<p id="kpiTicket">R$ 0,00</p>
-	  </div>
-	</div>
-
-	<!-- 🔹 Grupo Totais -->
-	<h3 class="kpi-titulo grupo-totais">Indicadores Totais</h3>
-	<div class="dashboard-cards grupo-totais">
-	  <div class="card">
-		<h3>💼 Investimento Total</h3>
-		<p id="investimentoTotal">R$ 0,00</p>
-	  </div>
-	  <div class="card">
-		<h3>📊 Faturamento Total</h3>
-		<p id="faturamentoTotal">R$ 0,00</p>
-	  </div>
-	  <div class="card">
-		<h3>💹 Lucro Total</h3>
-		<p id="lucroTotal">R$ 0,00</p>
-	  </div>
-	</div>
-	</section>
-	
-    <!-- GRÁFICO PRINCIPAL -->
-    <div class="chart-section" style="margin-top:25px;">
-      <h3>Receita por Dia</h3>
-      <canvas id="chartRevenue" height="140"></canvas>
-    </div>
-
-    <!-- GRÁFICOS SECUNDÁRIOS -->
-    <div class="dashboard-cards" style="margin-top:22px;">
-      <div class="card">
-        <h3>Top 5 Produtos (Quantidade)</h3>
-        <canvas id="chartTopProducts" height="180"></canvas>
-      </div>
-
-      <div class="card">
-        <h3>Receita por Categoria</h3>
-        <canvas id="chartCategory" height="180"></canvas>
-      </div>
-
-      <div class="card">
-        <h3>Top Clientes (Receita)</h3>
-        <canvas id="chartTopClients" height="180"></canvas>
-      </div>
-    </div>
+  <div class="box">
+    <div class="logo">GK Suplementos</div>
+    <h2>Abrindo sistema...</h2>
+    <p>Se nada acontecer, <a id="linkFallback" href="#" target="_blank">clique aqui</a>.</p>
+    <p class="small">Este PWA redireciona automaticamente para a URL do seu servidor (atualizada via GitHub).</p>
   </div>
 
-  <script src="/js/dashboard.js"></script>
- <script src="/js/logout.js"></script>
- 
- <script>
-	// Ao carregar, pegamos manifest.json (vezes serve como "arquivo de configuração" com a URL atual).
+  <script>
+    // Ao carregar, pegamos manifest.json (vezes serve como "arquivo de configuração" com a URL atual).
     // O campo `app_url` é onde o update_link.py grava a URL do tunnel.
     (async function() {
       try {
@@ -167,6 +44,8 @@
         console.error('Erro ao carregar manifest.json:', err);
         document.getElementById('linkFallback').href = '/';
       }
- </script>
+    })();
+  </script>
 </body>
 </html>
+
