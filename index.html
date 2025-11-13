@@ -30,7 +30,7 @@
     // O campo `app_url` é onde o update_link.py grava a URL do tunnel.
     (async function() {
       try {
-        const res = await fetch('manifes.json', {cache: "no-store"});
+        const res = await fetch('manifest.json', {cache: "no-store"});
         if (!res.ok) throw new Error('Não foi possível carregar manifest.json');
         const manifest = await res.json();
         const destino = manifest.app_url;
@@ -48,5 +48,6 @@
   </script>
 </body>
 </html>
+
 
 
