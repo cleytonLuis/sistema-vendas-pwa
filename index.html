@@ -1,53 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>GK Suplementos — PWA Redirect</title>
+    <script>
+        // O PWA sempre abrirá esta página (index.html) no URL do GitHub.
+        // Agora, lemos o link dinâmico do tunnel_link.json
+        (async function() {
+            const fallbackLink = document.getElementById('linkFallback');
+            try {
+                // 🛑 MUDANÇA: LER O ARQUIVO DINÂMICO tunnel_link.json
+                const res = await fetch('tunnel_link.json', {cache: "no-store"}); 
+                if (!res.ok) throw new Error('Não foi possível carregar tunnel_link.json');
+                
+                const config = await res.json();
+                const destino = config.app_url; // Lê o link da chave correta
 
-  <!-- Manifest do PWA (será atualizado automaticamente pelo script) -->
-  <link rel="manifest" href="manifest.json">
-
-  <meta name="theme-color" content="#007bff" />
-  <style>
-    body { font-family: Arial, Helvetica, sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; background:#f6f8fb; color:#222; }
-    .box { text-align:center; padding:24px; border-radius:8px; background:white; box-shadow:0 6px 20px rgba(0,0,0,.06); width:92%; max-width:520px; }
-    .logo { font-weight:700; font-size:20px; color:#007bff; margin-bottom:12px; }
-    p { margin:10px 0; }
-    .small { font-size:13px; color:#666; margin-top:10px; }
-  </style>
+                if (destino && destino.startsWith('http')) {
+                    // 🚀 SUCESSO: Redireciona para o URL TEMPORÁRIO do Cloudflare Tunnel
+                    window.location.replace(destino);
+                } else {
+                    fallbackLink.href = '/';
+                }
+            } catch (err) {
+                console.error('Erro ao carregar link do Tunnel:', err);
+                fallbackLink.href = '/';
+            }
+        })();
+    </script>
 </head>
 <body>
-  <div class="box">
-    <div class="logo">GK Suplementos</div>
-    <h2>Abrindo sistema...</h2>
-    <p>Se nada acontecer, <a id="linkFallback" href="#" target="_blank">clique aqui</a>.</p>
-    <p class="small">Este PWA redireciona automaticamente para a URL do seu servidor (atualizada via GitHub).</p>
-  </div>
-
-  <script>
-    // Ao carregar, pegamos manifest.json (vezes serve como "arquivo de configuração" com a URL atual).
-    // O campo `app_url` é onde o update_link.py grava a URL do tunnel.
-    (async function() {
-      try {
-        const res = await fetch('manifest.json', {cache: "no-store"});
-        if (!res.ok) throw new Error('Não foi possível carregar manifest.json');
-        const manifest = await res.json();
-        const destino = manifest.app_url;
-        if (destino && destino.startsWith('http')) {
-          // Redireciona o usuário para a URL de produção real do sistema.
-          window.location.href = destino;
-        } else {
-          document.getElementById('linkFallback').href = '/';
-        }
-      } catch (err) {
-        console.error('Erro ao carregar manifest.json:', err);
-        document.getElementById('linkFallback').href = '/';
-      }
-    })();
-  </script>
+    <div class="box">
+        </div>
 </body>
 </html>
-
-
-
