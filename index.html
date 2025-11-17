@@ -5,39 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GK Suplementos</title>
 
-    <!-- 1. ESSENCIAL PARA PWA: Link para o manifest -->
     <link rel="manifest" href="manifest.json">
     
-    <!-- 2. Link para seus estilos (assumindo que você tem styles.css) -->
     <link rel="stylesheet" href="styles.css"> 
+    
+    <script>
+        // 1. REGISTRO DO SERVICE WORKER (Executado imediatamente)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('✅ SW registrado com sucesso.'))
+                    .catch(err => console.error('❌ Falha no registro do SW:', err));
+            });
+        }
+        
+        // 2. LÓGICA DE REDIRECIONAMENTO CONTROLADO (Executado com atraso)
+        function executeRedirection() {
+            // Verifica se o app está rodando como um PWA instalado ('standalone')
+            const isStandalone = (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone);
+
+            if (isStandalone) {
+                // Se for modo App, não redirecione. Deixe a aplicação carregar normalmente.
+                console.log('App rodando em modo Standalone. Redirecionamento para Tunnel ignorado.');
+                return;
+            }
+
+            // Se for navegação normal no browser, tente redirecionar para o Tunnel
+            (async function() {
+                try {
+                    // Tenta ler o link dinâmico do servidor Cloudflared
+                    const res = await fetch('tunnel_link.json', {cache: "no-store"}); 
+                    if (!res.ok) throw new Error('tunnel_link.json inacessível.');
+                    
+                    const config = await res.json();
+                    const destino = config.app_url;
+
+                    // Redireciona se a URL de destino for válida e diferente da URL atual
+                    if (destino && destino.startsWith('http') && destino !== window.location.href) {
+                        console.log('🚀 Redirecionando para URL do Tunnel:', destino);
+                        window.location.replace(destino); 
+                    }
+                } catch (err) {
+                    console.error('Erro ao carregar link do Tunnel (Comportamento normal no GitHub Pages):', err.message);
+                }
+            })();
+        }
+
+        // Atrasamos a execução em 500ms para dar tempo ao Service Worker e ao Manifest carregar
+        setTimeout(executeRedirection, 500); 
+    </script>
 </head>
 <body>
     <header class="app-header">
         <h1>GK Suplementos - Sistema de Vendas</h1>
     </header>
     <main>
-        <!-- Conteúdo principal do seu aplicativo -->
         <div class="box">
             <p>Seja bem-vindo ao PWA de Vendas. Carregando dados...</p>
-            <!-- Seu app será renderizado aqui -->
-        </div>
+            </div>
     </main>
     
-    <!-- 3. Registro do Service Worker -->
-    <script>
-        // Registra o Service Worker para habilitar a funcionalidade PWA (cache e redirecionamento)
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(reg => console.log('✅ SW registrado com sucesso em:', reg.scope))
-                    .catch(err => console.error('❌ Falha no registro do SW:', err));
-            });
-        } else {
-            console.warn('Service Workers não são suportados neste navegador.');
-        }
-    </script>
-    
-    <!-- 4. Seu script principal (onde a API será chamada) -->
     <script src="acompanhamento-vendas.js"></script>
 </body>
 </html>
