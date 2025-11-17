@@ -1,7 +1,7 @@
 {
   "name": "GK Suplementos",
   "short_name": "GK Supl",
-  "start_url": "/index.html",
+  "start_url": "https://cleytonLuis.github.io/sistema-vendas-pwa/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0a74da",
