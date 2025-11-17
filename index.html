@@ -1,34 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <script>
-        // O PWA sempre abrirá esta página (index.html) no URL do GitHub.
-        // Agora, lemos o link dinâmico do tunnel_link.json
-        (async function() {
-            const fallbackLink = document.getElementById('linkFallback');
-            try {
-                // 🛑 MUDANÇA: LER O ARQUIVO DINÂMICO tunnel_link.json
-                const res = await fetch('tunnel_link.json', {cache: "no-store"}); 
-                if (!res.ok) throw new Error('Não foi possível carregar tunnel_link.json');
-                
-                const config = await res.json();
-                const destino = config.app_url; // Lê o link da chave correta
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GK Suplementos</title>
 
-                if (destino && destino.startsWith('http')) {
-                    // 🚀 SUCESSO: Redireciona para o URL TEMPORÁRIO do Cloudflare Tunnel
-                    window.location.replace(destino);
-                } else {
-                    fallbackLink.href = '/';
-                }
-            } catch (err) {
-                console.error('Erro ao carregar link do Tunnel:', err);
-                fallbackLink.href = '/';
-            }
-        })();
-    </script>
+    <!-- 1. ESSENCIAL PARA PWA: Link para o manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- 2. Link para seus estilos (assumindo que você tem styles.css) -->
+    <link rel="stylesheet" href="styles.css"> 
 </head>
 <body>
-    <div class="box">
+    <header class="app-header">
+        <h1>GK Suplementos - Sistema de Vendas</h1>
+    </header>
+    <main>
+        <!-- Conteúdo principal do seu aplicativo -->
+        <div class="box">
+            <p>Seja bem-vindo ao PWA de Vendas. Carregando dados...</p>
+            <!-- Seu app será renderizado aqui -->
         </div>
+    </main>
+    
+    <!-- 3. Registro do Service Worker -->
+    <script>
+        // Registra o Service Worker para habilitar a funcionalidade PWA (cache e redirecionamento)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('✅ SW registrado com sucesso em:', reg.scope))
+                    .catch(err => console.error('❌ Falha no registro do SW:', err));
+            });
+        } else {
+            console.warn('Service Workers não são suportados neste navegador.');
+        }
+    </script>
+    
+    <!-- 4. Seu script principal (onde a API será chamada) -->
+    <script src="acompanhamento-vendas.js"></script>
 </body>
 </html>
